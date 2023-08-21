@@ -15,5 +15,3 @@ public class VendingMachineApp {
 			vendingCli.run();                                              // Tell the Vending MachineCLI process to start running
 		}
 	}
-
-

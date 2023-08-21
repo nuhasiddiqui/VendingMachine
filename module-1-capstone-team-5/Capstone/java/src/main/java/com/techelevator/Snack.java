@@ -8,9 +8,9 @@ public class Snack extends Item {
     private String snackType;
 
     // Constructor
-    public Snack(String itemName, String snackType) {
+    public Snack(Slot itemSlot, String itemName, double itemPrice, String snackType) {
         // Instantiate the parent class object (Item)
-        super(itemName);
+        super(itemSlot, itemName, itemPrice);
         this.snackType = snackType;
     }
 

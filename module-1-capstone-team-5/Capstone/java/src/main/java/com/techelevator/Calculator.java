@@ -26,8 +26,8 @@ public class Calculator {
     }
 
     public void getChange(){
-        double remainingBlance = this.balance;
-        double change = remainingBlance * 100;
+        double remainingBalance = this.balance;
+        double change = remainingBalance * 100;
         int numOfQuarters = (int) change / 25;
         change = change % 25;
         int numOfDimes = (int) change / 10;

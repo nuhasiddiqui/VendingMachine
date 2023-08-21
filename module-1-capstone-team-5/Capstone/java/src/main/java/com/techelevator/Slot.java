@@ -5,17 +5,19 @@ public class Slot {
     //      "is-a": Snack "is-a" Item
     //      "has-a": Item "has-a" Slot
 
-    private int slotQuantity;
     private String slotNumber;
+    private int slotQuantity;
 
 
     // Constructor
-    public Slot (){
+    public Slot(String slotNumber, int slotQuantity) {
+        this.slotNumber = slotNumber;
+        this.slotQuantity = slotQuantity;
     }
 
-    public void reduceSlotQuantity (int numofItemBought){
+    public void reduceSlotQuantity (int numOfItemBought){
         int slotQuantityMax = 5;
-        this.slotQuantity = slotQuantityMax - numofItemBought;
+        this.slotQuantity = slotQuantityMax - numOfItemBought;
     }
 
     // Getters and Setters: slotQuantity, slotNumber

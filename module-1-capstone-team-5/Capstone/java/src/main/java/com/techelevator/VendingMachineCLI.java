@@ -14,9 +14,13 @@ package com.techelevator;
  ***************************************************************************************************************************/
 import com.techelevator.view.Menu;         // Gain access to Menu class provided for the Capstone
 
+import java.util.List;
+
 public class VendingMachineCLI {
 
     // Main menu options defined as constants
+	VendingMachine vendingMachine = new VendingMachine();
+
 
 	private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
 	private static final String MAIN_MENU_OPTION_PURCHASE      = "Purchase";
@@ -75,8 +79,51 @@ public class VendingMachineCLI {
  * Methods used to perform processing
  ********************************************************************************************************/
 	public void displayItems() {      // static attribute used as method is not associated with specific object instance
-		// Code to display items from Vending Machine
+		// Code to load (queue) snacks from Vending Machine
+		//		.loadSnacks() method: returns List<Snack>
+		List<Snack> snacks = vendingMachine.loadSnacks();
 
+		// Code to display items from Vending Machine
+		int snacksPerRow = 4;
+		int columnWidth = 20;
+		int bufferWidth = 10; // Adjust this value to set the desired buffer between columns outputted
+
+		for (int i = 0; i < snacks.size(); i += snacksPerRow) {
+			for (int j = 0; j < snacksPerRow && i + j < snacks.size(); j++) {
+				Snack snack = snacks.get(i + j);
+				System.out.printf("%-" + (columnWidth + bufferWidth) + "s", "Slot Number: " + snack.getItemSlot().getSlotNumber());
+			}
+			System.out.println();
+
+			for (int j = 0; j < snacksPerRow && i + j < snacks.size(); j++) {
+				Snack snack = snacks.get(i + j);
+				System.out.printf("%-" + (columnWidth + bufferWidth) + "s", "Snack: " + snack.getItemName());
+			}
+			System.out.println();
+
+			for (int j = 0; j < snacksPerRow && i + j < snacks.size(); j++) {
+				Snack snack = snacks.get(i + j);
+				System.out.printf("%-" + (columnWidth + bufferWidth) + "s", "Type: " + snack.getSnackType());
+			}
+			System.out.println();
+
+			for (int j = 0; j < snacksPerRow && i + j < snacks.size(); j++) {
+				Snack snack = snacks.get(i + j);
+				System.out.printf("%-" + (columnWidth + bufferWidth) + "s", "Price: $"  + String.format("%.2f", snack.getItemPrice()));
+			}
+			System.out.println();
+
+			for (int j = 0; j < snacksPerRow && i + j < snacks.size(); j++) {
+				Snack snack = snacks.get(i + j);
+				System.out.printf("%-" + (columnWidth + bufferWidth) + "s", "Quantity: "  + snack.getItemSlot().getSlotQuantity());
+			}
+			System.out.println();
+
+			for (int j = 0; j < snacksPerRow && i + j < snacks.size(); j++) {
+				System.out.print("-".repeat(columnWidth + bufferWidth));
+			}
+			System.out.println();
+		}
 	}
 	
 	public void purchaseItems() {	 // static attribute used as method is not associated with specific object instance

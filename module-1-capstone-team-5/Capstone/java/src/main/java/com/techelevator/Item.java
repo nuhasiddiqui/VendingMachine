@@ -6,17 +6,28 @@ public class Item {
     // Class-Object Relationships
     //      "has-a": Item "has-a" Slot
 
-    Slot itemSlot = new Slot();
+    private String slotNumber;
+    private int slotQuantity;
+    private Slot itemSlot = new Slot(slotNumber, slotQuantity);
     private String itemName;
     private double itemPrice;
 
     // Constructor
-    public Item(String itemName) {
+    public Item(Slot itemSlot, String itemName, double itemPrice) {
+        this.itemSlot = itemSlot;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
     }
 
-    // Getters and Setters: itemName, itemPrice
+    // Getters and Setters: itemSlot, itemName, itemPrice
+    public Slot getItemSlot() {
+        return itemSlot;
+    }
+
+    public void setItemSlot(Slot itemSlot) {
+        this.itemSlot = itemSlot;
+    }
+
     public String getItemName() {
         return itemName;
     }
