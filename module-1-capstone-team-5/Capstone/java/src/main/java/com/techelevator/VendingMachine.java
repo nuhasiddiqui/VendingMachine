@@ -9,7 +9,7 @@ import java.util.List;
 public class VendingMachine {
     // Class-Object Relationships
     //      "has-a": VendingMachine "has-a" Snack(s)
-    //               VendingMachine "has-a" Slot(s)
+    //               Snack: extension of Item "has-a" Slot(s)
 
     public static List<Snack> loadSnacks() {
         List<Snack> snacks = new ArrayList<>();

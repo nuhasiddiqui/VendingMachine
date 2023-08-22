@@ -4,7 +4,7 @@ public class Calculator {
     private double balance;
 
     // Constructor
-    public Calculator (double balance) {
+    public Calculator () {
         this.balance = 0;
     }
 
@@ -17,12 +17,12 @@ public class Calculator {
         this.balance = balance;
     }
 
-    private double moneyDeposited (double depositedAmount){
+    public double moneyDeposited (double depositedAmount){
         return this.balance += depositedAmount;
     }
 
     public double updateBalanceAfterPurchase (double cost){
-        return this.balance += cost;
+        return this.balance -= cost;
     }
 
     public void getChange(){
@@ -36,8 +36,10 @@ public class Calculator {
         change = change % 5;
         int numOfPennies = (int) change;
 
+        System.out.println("Transaction is finished. Machine is now dispensing change...");
+
         if (numOfQuarters > 0) {
-            System.out.print("Quarters: " + numOfQuarters + " ");
+            System.out.println("Quarters: " + numOfQuarters + " ");
         }
         if (numOfDimes > 0) {
             System.out.println("Dimes: " + numOfDimes + " ");

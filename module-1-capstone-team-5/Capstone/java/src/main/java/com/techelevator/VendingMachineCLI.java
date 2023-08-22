@@ -15,11 +15,12 @@ package com.techelevator;
 import com.techelevator.view.Menu;         // Gain access to Menu class provided for the Capstone
 
 import java.util.List;
+import java.util.Scanner;
 
 public class VendingMachineCLI {
 
     // Main menu options defined as constants
-	VendingMachine vendingMachine = new VendingMachine();
+
 
 
 	private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
@@ -81,6 +82,7 @@ public class VendingMachineCLI {
 	public void displayItems() {      // static attribute used as method is not associated with specific object instance
 		// Code to load (queue) snacks from Vending Machine
 		//		.loadSnacks() method: returns List<Snack>
+		VendingMachine vendingMachine = new VendingMachine();
 		List<Snack> snacks = vendingMachine.loadSnacks();
 
 		// Code to display items from Vending Machine
@@ -128,8 +130,47 @@ public class VendingMachineCLI {
 	
 	public void purchaseItems() {	 // static attribute used as method is not associated with specific object instance
 		// Code to purchase items from Vending Machine
+		Calculator calculator = new Calculator();
+		Scanner scanner = new Scanner(System.in);
+
+		do {
+			String choiceOne = "(1) Feed Money";
+			String choiceTwo = "(2) Select Product";
+			String choiceThree = "(3) Finish Transaction";
+			// Format the output of calculator.getBalance() to be X.XX
+			System.out.printf("Current Balance: $" + "%.2f", calculator.getBalance());
+			System.out.println("\n\n" + choiceOne + "\n" + choiceTwo + "\n" + choiceThree + "\n");
+			System.out.print("Please choose an option >>> ");
+			int userInput = scanner.nextInt();
+
+			boolean isFeedingMoney = userInput == 1;
+			boolean isSelectingProduct = userInput == 2;
+			boolean isFinishingTransaction = userInput == 3;
+			double snackPrice = 0;
+			double depositAmount = 0;
+
+			if (isFeedingMoney) {
+				System.out.print(">>> ");
+				depositAmount = scanner.nextDouble();
+				calculator.moneyDeposited(depositAmount);
+			} else if (isSelectingProduct) {
+				displayItems();
+				System.out.print(">>> ");
+				String slotNumber;
+				try {
+					slotNumber = scanner.next();
+
+				} catch (IllegalArgumentException e) {
+					System.out.println(e.getMessage());
+
+
+				}
+			} else if (isFinishingTransaction) {
+				calculator.getChange();
+				calculator.setBalance(0);
+			}
+		} while (calculator.getBalance() > 0);
 	}
-	
 	public void endMethodProcessing() { // static attribute used as method is not associated with specific object instance
 		// Any processing that needs to be done before method ends
 	}
