@@ -20,8 +20,10 @@ import java.util.Scanner;
 public class VendingMachineCLI {
 
     // Main menu options defined as constants
-
-
+	// Code to load (queue) snacks from Vending Machine
+	//		.loadSnacks() method: returns List<Snack>
+	VendingMachine vendingMachine = new VendingMachine();
+	List<Snack> snacks = vendingMachine.loadSnacks();
 
 	private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
 	private static final String MAIN_MENU_OPTION_PURCHASE      = "Purchase";
@@ -80,10 +82,6 @@ public class VendingMachineCLI {
  * Methods used to perform processing
  ********************************************************************************************************/
 	public void displayItems() {      // static attribute used as method is not associated with specific object instance
-		// Code to load (queue) snacks from Vending Machine
-		//		.loadSnacks() method: returns List<Snack>
-		VendingMachine vendingMachine = new VendingMachine();
-		List<Snack> snacks = vendingMachine.loadSnacks();
 
 		// Code to display items from Vending Machine
 		int snacksPerRow = 4;
@@ -156,14 +154,25 @@ public class VendingMachineCLI {
 			} else if (isSelectingProduct) {
 				displayItems();
 				System.out.print(">>> ");
-				String slotNumber;
 				try {
-					slotNumber = scanner.next();
+					String slotNumber = scanner.next();
+					Snack snackSelected = vendingMachine.getSnackBySlotNumber(slotNumber);
+					double currentBalance = calculator.getBalance();
+					boolean balanceGreaterThanZero = currentBalance > 0;
+					boolean isEnoughMoney = currentBalance >= snackSelected.getItemPrice(); //Checking if customer has enough money to buy snack
+					if (balanceGreaterThanZero && isEnoughMoney) {
+						try {
+							vendingMachine.dispenseSnack(snackSelected);
+							calculator.updateBalanceAfterPurchase(snackSelected.getItemPrice());
 
+						} catch (IllegalStateException e) { //Catches exception if there are not enough snacks
+							System.out.println(e.getMessage());
+						}
+					} else {
+						System.out.println("\n" + "Not enough money! Please insert cash or select another snack.");
+					}
 				} catch (IllegalArgumentException e) {
 					System.out.println(e.getMessage());
-
-
 				}
 			} else if (isFinishingTransaction) {
 				calculator.getChange();

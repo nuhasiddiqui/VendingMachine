@@ -22,4 +22,11 @@ public class Snack extends Item {
     public void setSnackType(String snackType) {
         this.snackType = snackType;
     }
+
+    // Override the toString() method in your Snack class to provide a meaningful string representation of the Snack object.
+//    @Override
+//    public String toString() {
+//        return "Snack: " + getItemName() + ", Price: " + getItemPrice() + ", Type: " + getSnackType();
+//    }
+
 }
