@@ -126,59 +126,94 @@ public class VendingMachineCLI {
 		}
 	}
 	
-	public void purchaseItems() {	 // static attribute used as method is not associated with specific object instance
+	public void purchaseItems() {     // static attribute used as method is not associated with specific object instance
 		// Code to purchase items from Vending Machine
 		Calculator calculator = new Calculator();
 		Scanner scanner = new Scanner(System.in);
 
-		do {
-			String choiceOne = "(1) Feed Money";
-			String choiceTwo = "(2) Select Product";
-			String choiceThree = "(3) Finish Transaction";
-			// Format the output of calculator.getBalance() to be X.XX
-			System.out.printf("Current Balance: $" + "%.2f", calculator.getBalance());
-			System.out.println("\n\n" + choiceOne + "\n" + choiceTwo + "\n" + choiceThree + "\n");
+		// To handle the different prompts within this do while loop and reprompt the user when needed,
+		// use separate loops for each prompt and include error handling.
+
+		while (true) {
+			double currentBalance = calculator.getBalance();
+			System.out.printf("\nCurrent Balance: $%.2f\n", currentBalance);
+			System.out.println("\n(1) Feed Money\n(2) Select Product\n(3) Finish Transaction\n");
 			System.out.print("Please choose an option >>> ");
 			int userInput = scanner.nextInt();
+			scanner.nextLine(); // Consume newline character
 
-			boolean isFeedingMoney = userInput == 1;
-			boolean isSelectingProduct = userInput == 2;
-			boolean isFinishingTransaction = userInput == 3;
-			double snackPrice = 0;
-			double depositAmount = 0;
+			boolean validInput = false; // Reset validInput for each iteration
 
-			if (isFeedingMoney) {
-				System.out.print(">>> ");
-				depositAmount = scanner.nextDouble();
-				calculator.moneyDeposited(depositAmount);
-			} else if (isSelectingProduct) {
-				displayItems();
-				System.out.print(">>> ");
-				try {
-					String slotNumber = scanner.next();
-					Snack snackSelected = vendingMachine.getSnackBySlotNumber(slotNumber);
-					double currentBalance = calculator.getBalance();
-					boolean balanceGreaterThanZero = currentBalance > 0;
-					boolean isEnoughMoney = currentBalance >= snackSelected.getItemPrice(); //Checking if customer has enough money to buy snack
-					if (balanceGreaterThanZero && isEnoughMoney) {
-						try {
-							vendingMachine.dispenseSnack(snackSelected);
-							calculator.updateBalanceAfterPurchase(snackSelected.getItemPrice());
+			switch (userInput){
+				case 1:
+					double depositAmount;
+					boolean depositValidInput = false;
 
-						} catch (IllegalStateException e) { //Catches exception if there are not enough snacks
-							System.out.println(e.getMessage());
+					// Consume any leftover newline characters
+					scanner.nextLine();
+
+					while (!depositValidInput) {
+						System.out.print("Please enter the amount to deposit >>> ");
+						if (scanner.hasNextDouble()) {
+							depositAmount = scanner.nextDouble();
+							if (depositAmount > 0) {
+								calculator.moneyDeposited(depositAmount);
+								depositValidInput = true;
+							} else {
+								System.out.println("Please enter a valid deposit amount (greater than 0).");
+							}
+						} else {
+							System.out.println("Invalid input. Please enter a valid numeric value.");
+							scanner.nextLine(); // Clear the input buffer
 						}
-					} else {
-						System.out.println("\n" + "Not enough money! Please insert cash or select another snack.");
 					}
-				} catch (IllegalArgumentException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (isFinishingTransaction) {
-				calculator.getChange();
-				calculator.setBalance(0);
+					break;
+				case 2:
+					if (currentBalance <= 0) {
+						System.out.println("Insufficient balance. Please deposit money before selecting a product.");
+						break; // Skip to the next iteration of the loop
+					}
+					displayItems();
+					while (!validInput) {
+						System.out.print("Please enter the slot number >>> ");
+						String slotNumber = scanner.next().toUpperCase(); // Convert to uppercase, ensures that both variations of userInput (ex: d4 and D4) are recognized
+						// Check if the entered slotNumber exists in the snacks List
+						Snack snackSelected = vendingMachine.getSnackBySlotNumber(slotNumber);
+						if (snackSelected != null) {
+							if (snackSelected.getItemSlot().getSlotQuantity() > 0) {
+								boolean balanceGreaterThanZero = currentBalance > 0;
+								boolean isEnoughMoney = currentBalance >= snackSelected.getItemPrice();
+								if (balanceGreaterThanZero && isEnoughMoney) {
+									try {
+										vendingMachine.dispenseSnack(snackSelected);
+										calculator.updateBalanceAfterPurchase(snackSelected.getItemPrice());
+										validInput = true;
+									} catch (IllegalStateException e) {
+										System.out.println(e.getMessage());
+									}
+								} else {
+									System.out.println("\nNot enough money! Please insert cash or select another snack.");
+									System.out.printf("\nCurrent Balance: $%.2f\n", calculator.getBalance());
+									validInput = true; // Allow user to retry entering a valid option
+								}
+							} else {
+								System.out.println("\nThis snack is sold out. Please select another snack.");
+								validInput = true;
+							}
+						} else {
+							System.out.println("Invalid slot number. Please enter a valid slot number.");
+						}
+					}
+					break;
+				case 3:
+					calculator.getChange();
+					calculator.setBalance(0);
+					return; // Exit the loop when finishing the transaction
+				default:
+					System.out.println("Please choose a valid option (1, 2, or 3).");
+					break; // Continue the loop for invalid input
 			}
-		} while (calculator.getBalance() > 0);
+		}
 	}
 	public void endMethodProcessing() { // static attribute used as method is not associated with specific object instance
 		// Any processing that needs to be done before method ends

@@ -24,9 +24,9 @@ public class Snack extends Item {
     }
 
     // Override the toString() method in your Snack class to provide a meaningful string representation of the Snack object.
-//    @Override
-//    public String toString() {
-//        return "Snack: " + getItemName() + ", Price: " + getItemPrice() + ", Type: " + getSnackType();
-//    }
+    @Override
+    public String toString() {
+        return "Snack: " + getItemName() + ", Price: $ " + getItemPrice() + ", Type: " + getSnackType();
+    }
 
 }

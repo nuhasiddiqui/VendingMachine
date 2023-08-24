@@ -47,20 +47,23 @@ public class VendingMachine {
 
     public void dispenseSnack (Snack targetSnack) {
         if (targetSnack.getItemSlot().getSlotQuantity() > 0) {
-            targetSnack.getItemSlot().setSlotQuantity(targetSnack.getItemSlot().getSlotQuantity() -1);
+            targetSnack.getItemSlot().setSlotQuantity((targetSnack.getItemSlot().getSlotQuantity()) - 1);
             // Display message depending on targetSnack snackType
+            //      Item name, cost, and the money remaining.
+            System.out.println("Item Selected | " + targetSnack);
+            //      Message depending on the snackType
             switch (targetSnack.getSnackType()) {
                 case "Chip":
-                    System.out.println("\n" + "Crunch Crunch, Yum!");
+                    System.out.println("Crunch Crunch, Yum!");
                     break;
                 case "Candy":
-                    System.out.println("\n" + "Munch Munch, Yum !");
+                    System.out.println("Munch Munch, Yum !");
                     break;
                 case "Drink":
-                    System.out.println("\n" + "Glug Glug, Yum!");
+                    System.out.println("Glug Glug, Yum!");
                     break;
                 case "Gum":
-                    System.out.println("\n" + "Chew Chew, Yum!");
+                    System.out.println("Chew Chew, Yum!");
                     break;
             }
         }

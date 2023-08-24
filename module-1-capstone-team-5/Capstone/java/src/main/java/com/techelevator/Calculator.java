@@ -37,6 +37,7 @@ public class Calculator {
         int numOfPennies = (int) change;
 
         System.out.println("Transaction is finished. Machine is now dispensing change...");
+        System.out.printf("$" + "%.2f\n", remainingBalance);
 
         if (numOfQuarters > 0) {
             System.out.println("Quarters: " + numOfQuarters + " ");
