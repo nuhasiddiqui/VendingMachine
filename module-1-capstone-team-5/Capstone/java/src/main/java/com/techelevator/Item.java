@@ -11,12 +11,26 @@ public class Item {
     private Slot itemSlot = new Slot(slotNumber, slotQuantity);
     private String itemName;
     private double itemPrice;
+    private int sales; // New property to track sales count
+
 
     // Constructor
     public Item(Slot itemSlot, String itemName, double itemPrice) {
         this.itemSlot = itemSlot;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
+        this.sales = 0; // Initialize sales count to 0
+
+    }
+
+    // Method to update sales count when a snack is purchased
+    public void updateSales(int quantitySold) {
+        sales += quantitySold;
+    }
+
+    // Method to get the sales count
+    public int getSales() {
+        return sales;
     }
 
     // Getters and Setters: itemSlot, itemName, itemPrice
@@ -43,4 +57,5 @@ public class Item {
     public void setItemPrice(double itemPrice) {
         this.itemPrice = itemPrice;
     }
+
 }

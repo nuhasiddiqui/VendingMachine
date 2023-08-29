@@ -14,7 +14,16 @@ package com.techelevator;
  ***************************************************************************************************************************/
 import com.techelevator.view.Menu;         // Gain access to Menu class provided for the Capstone
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
@@ -28,10 +37,12 @@ public class VendingMachineCLI {
 	private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
 	private static final String MAIN_MENU_OPTION_PURCHASE      = "Purchase";
 	private static final String MAIN_MENU_OPTION_EXIT          = "Exit";
+
+	private static final String MAIN_MENU_OPTION_SALESREPORT   = "Sales Report";
 	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_DISPLAY_ITEMS,
 													    MAIN_MENU_OPTION_PURCHASE,
-													    MAIN_MENU_OPTION_EXIT
-													    };
+													    MAIN_MENU_OPTION_EXIT,
+														MAIN_MENU_OPTION_SALESREPORT};
 	
 	private Menu vendingMenu;              // Menu object to be used by an instance of this class
 	
@@ -74,6 +85,10 @@ public class VendingMachineCLI {
 					endMethodProcessing();    // Invoke method to perform end of method processing
 					shouldProcess = false;    // Set variable to end loop
 					break;                    // Exit switch statement
+
+				case MAIN_MENU_OPTION_SALESREPORT:
+					generateSalesReport();
+					break;
 			}	
 		}
 		return;                               // End method and return to caller
@@ -152,8 +167,8 @@ public class VendingMachineCLI {
 							depositAmount = scanner.nextDouble();
 							if (depositAmount > 0) {
 								double newBalance = calculator.getBalance() + depositAmount;
-								calculator.moneyDeposited(depositAmount);
 								vendingMachine.logTransaction("FEED MONEY", depositAmount, newBalance);
+								calculator.moneyDeposited(depositAmount);
 								depositValidInput = true;
 							} else {
 								System.out.println("Please enter a valid deposit amount (greater than 0).");
@@ -189,6 +204,9 @@ public class VendingMachineCLI {
 										vendingMachine.logTransaction(snackSelected.getItemName() + " " + slotNumber, snackSelected.getItemPrice(), newBalance);
 										calculator.updateBalanceAfterPurchase(snackSelected.getItemPrice());
 										snackValidInput = true;
+
+										// Update the sales for the purchased item
+										snackSelected.updateSales(1);
 									} catch (IllegalStateException e) {
 										System.out.println(e.getMessage());
 									}
@@ -220,4 +238,25 @@ public class VendingMachineCLI {
 	public void endMethodProcessing() { // static attribute used as method is not associated with specific object instance
 		// Any processing that needs to be done before method ends
 	}
+
+	// Method to generate and save the sales report
+	public void generateSalesReport() {
+		LocalDateTime timestamp = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMddyyyy_hhmmss_a");
+		String formattedTimestamp = timestamp.format(formatter);
+		String reportFileName = "SalesReport_" + formattedTimestamp + ".txt";
+
+		double totalSales = 0;
+
+		try (FileWriter writer = new FileWriter(reportFileName)) {
+			for (Snack snack : snacks) {
+				writer.write(snack.getItemName() + "|" + snack.getSales() + "\n");
+				totalSales += snack.getItemPrice() * snack.getSales(); // Price * Number of Sales
+			}
+			writer.write("**TOTAL SALES** $" + totalSales);
+		} catch (IOException e) {
+			System.out.println("Error writing sales report to file: " + e.getMessage());
+		}
+	}
+
 }
