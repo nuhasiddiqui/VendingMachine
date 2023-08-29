@@ -151,7 +151,9 @@ public class VendingMachineCLI {
 						if (scanner.hasNextDouble()) {
 							depositAmount = scanner.nextDouble();
 							if (depositAmount > 0) {
+								double newBalance = calculator.getBalance() + depositAmount;
 								calculator.moneyDeposited(depositAmount);
+								vendingMachine.logTransaction("FEED MONEY", depositAmount, newBalance);
 								depositValidInput = true;
 							} else {
 								System.out.println("Please enter a valid deposit amount (greater than 0).");
@@ -162,6 +164,7 @@ public class VendingMachineCLI {
 							scanner.nextLine(); // Clear the input buffer
 						}
 					}
+					scanner.nextLine(); // Clear the input buffer
 					break;
 				case "2":
 					boolean snackValidInput = false; // Reset for each iteration
@@ -182,6 +185,8 @@ public class VendingMachineCLI {
 								if (balanceGreaterThanZero && isEnoughMoney) {
 									try {
 										vendingMachine.dispenseSnack(snackSelected);
+										double newBalance = calculator.getBalance() - snackSelected.getItemPrice();
+										vendingMachine.logTransaction(snackSelected.getItemName() + " " + slotNumber, snackSelected.getItemPrice(), newBalance);
 										calculator.updateBalanceAfterPurchase(snackSelected.getItemPrice());
 										snackValidInput = true;
 									} catch (IllegalStateException e) {
@@ -202,6 +207,7 @@ public class VendingMachineCLI {
 					scanner.nextLine(); // Clear the input buffer
 					break;
 				case "3":
+					vendingMachine.logTransaction("GIVE CHANGE", calculator.getBalance(), 0.00);
 					calculator.getChange();
 					calculator.setBalance(0);
 					return; // Exit the method and stop the loop

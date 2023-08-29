@@ -1,7 +1,8 @@
 package com.techelevator;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,6 +67,23 @@ public class VendingMachine {
                     System.out.println("Chew Chew, Yum!");
                     break;
             }
+        }
+    }
+
+
+    public void logTransaction(String action, double amount, double balance) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("Log.txt", true))) {
+            LocalDateTime timestamp = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
+            String formattedTimestamp = timestamp.format(formatter);
+
+            String formattedAmount = String.format("$%.2f", amount);
+            String formattedBalance = String.format("$%.2f", balance);
+
+            writer.println(String.format("%-25s %-25s %-15s %s", formattedTimestamp, action, formattedAmount, formattedBalance));
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the log file.");
+            e.printStackTrace();
         }
     }
 }
