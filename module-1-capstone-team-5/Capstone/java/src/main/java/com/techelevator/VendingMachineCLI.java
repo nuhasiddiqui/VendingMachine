@@ -139,18 +139,12 @@ public class VendingMachineCLI {
 			System.out.printf("\nCurrent Balance: $%.2f\n", currentBalance);
 			System.out.println("\n(1) Feed Money\n(2) Select Product\n(3) Finish Transaction\n");
 			System.out.print("Please choose an option >>> ");
-			int userInput = scanner.nextInt();
-			scanner.nextLine(); // Consume newline character
-
-			boolean validInput = false; // Reset validInput for each iteration
+			String userInput = scanner.nextLine().trim(); // Read user input as a string and trim whitespace
 
 			switch (userInput){
-				case 1:
+				case "1":
 					double depositAmount;
 					boolean depositValidInput = false;
-
-					// Consume any leftover newline characters
-					scanner.nextLine();
 
 					while (!depositValidInput) {
 						System.out.print("Please enter the amount to deposit >>> ");
@@ -161,22 +155,24 @@ public class VendingMachineCLI {
 								depositValidInput = true;
 							} else {
 								System.out.println("Please enter a valid deposit amount (greater than 0).");
+								scanner.nextLine(); // Clear the input buffer
 							}
 						} else {
-							System.out.println("Invalid input. Please enter a valid numeric value.");
+							System.out.println("Please enter a valid numeric value.");
 							scanner.nextLine(); // Clear the input buffer
 						}
 					}
 					break;
-				case 2:
+				case "2":
+					boolean snackValidInput = false; // Reset for each iteration
 					if (currentBalance <= 0) {
 						System.out.println("Insufficient balance. Please deposit money before selecting a product.");
 						break; // Skip to the next iteration of the loop
 					}
 					displayItems();
-					while (!validInput) {
+					while (!snackValidInput) {
 						System.out.print("Please enter the slot number >>> ");
-						String slotNumber = scanner.next().toUpperCase(); // Convert to uppercase, ensures that both variations of userInput (ex: d4 and D4) are recognized
+						String slotNumber = scanner.next().trim().toUpperCase(); // Convert to uppercase, ensures that both variations of userInput (ex: d4 and D4) are recognized
 						// Check if the entered slotNumber exists in the snacks List
 						Snack snackSelected = vendingMachine.getSnackBySlotNumber(slotNumber);
 						if (snackSelected != null) {
@@ -187,30 +183,30 @@ public class VendingMachineCLI {
 									try {
 										vendingMachine.dispenseSnack(snackSelected);
 										calculator.updateBalanceAfterPurchase(snackSelected.getItemPrice());
-										validInput = true;
+										snackValidInput = true;
 									} catch (IllegalStateException e) {
 										System.out.println(e.getMessage());
 									}
 								} else {
 									System.out.println("\nNot enough money! Please insert cash or select another snack.");
-									System.out.printf("\nCurrent Balance: $%.2f\n", calculator.getBalance());
-									validInput = true; // Allow user to retry entering a valid option
+									snackValidInput = true; // Allow user to retry entering a valid option
 								}
 							} else {
 								System.out.println("\nThis snack is sold out. Please select another snack.");
-								validInput = true;
+								snackValidInput = true;
 							}
 						} else {
 							System.out.println("Invalid slot number. Please enter a valid slot number.");
 						}
 					}
+					scanner.nextLine(); // Clear the input buffer
 					break;
-				case 3:
+				case "3":
 					calculator.getChange();
 					calculator.setBalance(0);
-					return; // Exit the loop when finishing the transaction
+					return; // Exit the method and stop the loop
 				default:
-					System.out.println("Please choose a valid option (1, 2, or 3).");
+					System.out.println("*** "+userInput+" is not a valid option ***");
 					break; // Continue the loop for invalid input
 			}
 		}
