@@ -16,14 +16,9 @@ import com.techelevator.view.Menu;         // Gain access to Menu class provided
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
@@ -242,18 +237,28 @@ public class VendingMachineCLI {
 	// Method to generate and save the sales report
 	public void generateSalesReport() {
 		LocalDateTime timestamp = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMddyyyy_hhmmss_a");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy_hhmm.a");
 		String formattedTimestamp = timestamp.format(formatter);
-		String reportFileName = "SalesReport_" + formattedTimestamp + ".txt";
+		String salesReportFileName = "SalesReport_" + formattedTimestamp + ".txt";
 
 		double totalSales = 0;
 
-		try (FileWriter writer = new FileWriter(reportFileName)) {
+		try (FileWriter writer = new FileWriter(salesReportFileName)) {
+			writer.write(String.format("%-25s | %-10s | %-10s%n", "Product", "Quantity Sold", "Total Sales"));
+			writer.write("-----------------------------------------\n");
+
 			for (Snack snack : snacks) {
-				writer.write(snack.getItemName() + "|" + snack.getSales() + "\n");
-				totalSales += snack.getItemPrice() * snack.getSales(); // Price * Number of Sales
+				String productName = snack.getItemName();
+				int quantitySold = snack.getItemSaleCount();
+				double productTotalSales = snack.getItemPrice() * snack.getItemSaleCount();
+
+				writer.write(String.format("%-25s | %-10d | $%-10.2f%n", productName, quantitySold, productTotalSales));
+
+				totalSales += productTotalSales;
 			}
-			writer.write("**TOTAL SALES** $" + totalSales);
+
+			writer.write("-----------------------------------------\n");
+			writer.write(String.format("%-25s | %-10s | $%-10.2f%n", "**TOTAL SALES**", "", totalSales));
 		} catch (IOException e) {
 			System.out.println("Error writing sales report to file: " + e.getMessage());
 		}

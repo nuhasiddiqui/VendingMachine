@@ -11,7 +11,7 @@ public class Item {
     private Slot itemSlot = new Slot(slotNumber, slotQuantity);
     private String itemName;
     private double itemPrice;
-    private int sales; // New property to track sales count
+    private int itemSaleCount; // New property to track itemSaleCount count
 
 
     // Constructor
@@ -19,18 +19,18 @@ public class Item {
         this.itemSlot = itemSlot;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
-        this.sales = 0; // Initialize sales count to 0
+        this.itemSaleCount = 0; // Initialize itemSaleCount count to 0
 
     }
 
-    // Method to update sales count when a snack is purchased
+    // Method to update itemSaleCount count when a snack is purchased
     public void updateSales(int quantitySold) {
-        sales += quantitySold;
+        itemSaleCount += quantitySold;
     }
 
-    // Method to get the sales count
-    public int getSales() {
-        return sales;
+    // Method to get the itemSaleCount count
+    public int getItemSaleCount() {
+        return itemSaleCount;
     }
 
     // Getters and Setters: itemSlot, itemName, itemPrice

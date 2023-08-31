@@ -1,0 +1,20 @@
+Product                   | Quantity Sold | Total Sales
+-----------------------------------------
+Potato Crisps             | 0          | $0.00      
+Stackers                  | 1          | $1.45      
+Grain Waves               | 0          | $0.00      
+Cloud Popcorn             | 0          | $0.00      
+Moonpie                   | 3          | $5.40      
+Cowtales                  | 0          | $0.00      
+Wonka Bar                 | 0          | $0.00      
+Crunchie                  | 0          | $0.00      
+Cola                      | 2          | $2.50      
+Dr. Salt                  | 0          | $0.00      
+Mountain Melter           | 0          | $0.00      
+Heavy                     | 0          | $0.00      
+U-Chews                   | 0          | $0.00      
+Little League Chew        | 1          | $0.95      
+Chiclets                  | 1          | $0.75      
+Triplemint                | 0          | $0.00      
+-----------------------------------------
+**TOTAL SALES**           |            | $11.05     
